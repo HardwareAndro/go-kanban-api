@@ -27,8 +27,8 @@ Bu yapıda:
 - **mesaj detayı**: Commit'in özeti, kısa ve açıklayıcı bir şekilde yazılmalıdır.
 
 #### Örnekler:
-- **feature: login işlemi için JWT entegrasyonu yapıldı**
-- **refactor: kullanıcı doğrulama işlemi optimize edildi**
+- **feature: JWT integration was made for the login process**
+- **refactor: user authentication process optimized**
 
 ### Ek Notlar:
 - Branch isimleri ve commit mesajları açıklayıcı, net ve kısa olmalıdır.
