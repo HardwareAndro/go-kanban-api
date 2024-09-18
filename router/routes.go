@@ -21,7 +21,7 @@ func (r *Router) SetupRoutes() {
 	projectRouter := r.router.Group("/projects") // localhost:8080/projects/1231/categories
 	{
 		projectRouter.GET("/", r.pc.GetProjects)
-		projectRouter.POST("/", func(context *gin.Context) {})
+		projectRouter.POST("/", r.pc.AddProject)
 		projectRouter.GET("/:id", func(context *gin.Context) {})
 		projectRouter.GET("/:id/categories", func(context *gin.Context) {})
 		projectRouter.PUT("/:id", func(context *gin.Context) {})

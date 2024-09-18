@@ -15,3 +15,8 @@ func (ps *ProjectService) GetProjects() []model.Project {
 
 	return []model.Project{project1, project2, project3}
 }
+func (ps *ProjectService) AddProject(project model.Project) {
+	// TODO: After the database connection is made, add the project that comes here to the model
+	var projects []model.Project
+	projects = append(projects, project)
+}
