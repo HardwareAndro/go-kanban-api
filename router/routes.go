@@ -23,7 +23,7 @@ func (r *Router) SetupRoutes() {
 		projectRouter.GET("/", r.pc.GetProjects)
 		projectRouter.POST("/", func(context *gin.Context) {})
 		projectRouter.GET("/:id", func(context *gin.Context) {})
-		projectRouter.GET("/:id/categories", func(context *gin.Context) {})
+		projectRouter.GET("/:id/categories", r.pc.GetProjectCategoriesById)
 		projectRouter.PUT("/:id", func(context *gin.Context) {})
 		projectRouter.DELETE("/:id", func(context *gin.Context) {})
 	}

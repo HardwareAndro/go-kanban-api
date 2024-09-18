@@ -15,3 +15,17 @@ func (ps *ProjectService) GetProjects() []model.Project {
 
 	return []model.Project{project1, project2, project3}
 }
+func (ps *ProjectService) GetProjectCategoriesById(id string) []model.Category {
+	// TODO: After the database connection is made, return the Categories with the id found in the project model
+	projects := []model.Project{
+		{ID: "1", Name: "Project 1", Categories: []model.Category{}},
+		{ID: "2", Name: "Project 2", Categories: []model.Category{}},
+		{ID: "3", Name: "Project 3", Categories: []model.Category{}},
+	}
+	for _, project := range projects {
+		if project.ID == id {
+			return project.Categories
+		}
+	}
+	return []model.Category{}
+}
