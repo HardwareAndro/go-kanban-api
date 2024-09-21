@@ -1,10 +1,13 @@
 package service
 
-import "github.com/HardwareAndro/go-kanban-api/model"
+import (
+	"github.com/HardwareAndro/go-kanban-api/model"
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 type ProjectService struct{}
 
-func NewProjectService() *ProjectService {
+func NewProjectService(*mongo.Client) *ProjectService {
 	return &ProjectService{}
 }
 
