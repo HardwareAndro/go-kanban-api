@@ -13,8 +13,8 @@ import (
 )
 
 type Driver struct {
-	app    config.GoAppTools
-	client *mongo.Client
+	App    config.GoAppTools
+	Client *mongo.Client
 }
 
 func NewDriver() *Driver {
@@ -24,30 +24,29 @@ func NewDriver() *Driver {
 	app.InfoLogger = InfoLogger
 	app.ErrorLogger = ErrorLogger
 	return &Driver{
-		app: app,
+		App: app,
 	}
 }
 func (dr *Driver) ConnectDatabase() {
 	err := godotenv.Load()
 	if err != nil {
-		dr.app.ErrorLogger.Println("No .env file found")
+		dr.App.ErrorLogger.Println("No .env file found")
+		return
 	}
 
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
-		dr.app.ErrorLogger.Fatalln(fmt.Errorf("MONGODB_URI not found in environment"))
+		dr.App.ErrorLogger.Fatalln(fmt.Errorf("MONGODB_URI not found in environment"))
+		return
 	}
 
-	dr.client, err = connection(uri)
+	dr.Client, err = connection(uri)
 	if err != nil {
-		dr.app.ErrorLogger.Fatalln("Failed to connect to the database:", err)
+		dr.App.ErrorLogger.Fatalln("Failed to connect to the database:", err)
+		return
 	}
-	defer func() {
-		if err := dr.client.Disconnect(context.TODO()); err != nil {
-			dr.app.ErrorLogger.Println("Error disconnecting from MongoDB:", err)
-		}
-	}()
-	dr.app.InfoLogger.Println("MongoDB's Database Connection Successfully Realized")
+
+	dr.App.InfoLogger.Println("MongoDB's Database Connection Successfully Realized")
 }
 
 func connection(URI string) (*mongo.Client, error) {
