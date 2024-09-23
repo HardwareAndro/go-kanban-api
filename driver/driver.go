@@ -13,8 +13,12 @@ import (
 )
 
 type Driver struct {
-	App    config.GoAppTools
-	Client *mongo.Client
+	App          config.GoAppTools
+	Client       *mongo.Client
+	ProjectColl  *mongo.Collection
+	CategoryColl *mongo.Collection
+	TaskColl     *mongo.Collection
+	UserColl     *mongo.Collection
 }
 
 func NewDriver() *Driver {
@@ -45,8 +49,12 @@ func (dr *Driver) ConnectDatabase() {
 		dr.App.ErrorLogger.Fatalln("Failed to connect to the database:", err)
 		return
 	}
-
 	dr.App.InfoLogger.Println("MongoDB's Database Connection Successfully Realized")
+
+	dr.ProjectColl = dr.Client.Database("go-kanban-api").Collection("projects")
+	dr.CategoryColl = dr.Client.Database("go-kanban-api").Collection("categories")
+	dr.TaskColl = dr.Client.Database("go-kanban-api").Collection("tasks")
+	dr.UserColl = dr.Client.Database("go-kanban-api").Collection("users")
 }
 
 func connection(URI string) (*mongo.Client, error) {

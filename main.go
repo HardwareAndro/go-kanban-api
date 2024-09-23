@@ -4,13 +4,11 @@ import (
 	"context"
 	"github.com/HardwareAndro/go-kanban-api/controller"
 	"github.com/HardwareAndro/go-kanban-api/driver"
+	"github.com/HardwareAndro/go-kanban-api/repository"
 	"github.com/HardwareAndro/go-kanban-api/router"
 	"github.com/HardwareAndro/go-kanban-api/service"
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
 )
-
-var client *mongo.Client
 
 func main() {
 	r := gin.Default()
@@ -22,9 +20,16 @@ func main() {
 			projectDriver.App.ErrorLogger.Println("Error disconnecting from MongoDB:", err)
 		}
 	}()
-	projectService := service.NewProjectService(client)
+	categoryRepository := repository.NewCategoryRepository(projectDriver.CategoryColl)
+	projectRepository := repository.NewProjectRepository(projectDriver.ProjectColl)
+
+	categoryService := service.NewCategoryService(categoryRepository)
+	projectService := service.NewProjectService(projectRepository)
+
+	cc := controller.NewCategoryController(categoryService)
 	pc := controller.NewProjectController(projectService)
-	routes := router.NewRouter(r, pc)
+
+	routes := router.NewRouter(r, pc, cc)
 
 	routes.SetupRoutes()
 	r.Run()
