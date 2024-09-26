@@ -3,13 +3,15 @@ package driver
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"time"
+
+	"github.com/HardwareAndro/go-kanban-api/app/shared/constants"
 	"github.com/HardwareAndro/go-kanban-api/config"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
-	"os"
-	"time"
 )
 
 type Driver struct {
@@ -31,25 +33,26 @@ func NewDriver() *Driver {
 		App: app,
 	}
 }
+
 func (dr *Driver) ConnectDatabase() {
 	err := godotenv.Load()
 	if err != nil {
-		dr.App.ErrorLogger.Println("No .env file found")
+		dr.App.ErrorLogger.Println(constants.ERR_ENV_FILE_NOT_FOUND)
 		return
 	}
 
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
-		dr.App.ErrorLogger.Fatalln(fmt.Errorf("MONGODB_URI not found in environment"))
+		dr.App.ErrorLogger.Fatalln(fmt.Errorf(constants.ERR_MONGODB_URI_NOT_FOUND))
 		return
 	}
 
 	dr.Client, err = connection(uri)
 	if err != nil {
-		dr.App.ErrorLogger.Fatalln("Failed to connect to the database:", err)
+		dr.App.ErrorLogger.Fatalln(constants.ERR_MONGO_CONNECTION, err)
 		return
 	}
-	dr.App.InfoLogger.Println("MongoDB's Database Connection Successfully Realized")
+	dr.App.InfoLogger.Println(constants.SUCCESS_MONGODB_CONNECTION_ESTABLISHED)
 
 	dr.ProjectColl = dr.Client.Database("go-kanban-api").Collection("projects")
 	dr.CategoryColl = dr.Client.Database("go-kanban-api").Collection("categories")
