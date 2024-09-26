@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      target: builder
+    environment:
+      - GIN_MODE=release
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+  mongo: 
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+volumes:
+  mongodata:
+    driver: local
