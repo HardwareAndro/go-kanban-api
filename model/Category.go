@@ -1,7 +1,7 @@
 package model
 
 type Category struct {
-	Name  string `json:"name,omitempty"`
+	Name  string `json:"name"`
 	ID    string `json:"id,omitempty"`
-	Tasks []Task `json:"tasks,omitempty"`
+	Tasks []Task `json:"tasks"`
 }

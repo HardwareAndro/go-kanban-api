@@ -8,12 +8,16 @@ import (
 type Router struct {
 	router *gin.Engine
 	pc     *controller.ProjectController
+	cc     *controller.CategoryController
 }
 
-func NewRouter(router *gin.Engine, pc *controller.ProjectController) *Router {
+func NewRouter(router *gin.Engine,
+	pc *controller.ProjectController,
+	cc *controller.CategoryController) *Router {
 	return &Router{
 		router: router,
 		pc:     pc,
+		cc:     cc,
 	}
 }
 
@@ -30,8 +34,8 @@ func (r *Router) SetupRoutes() {
 
 	categoryRouter := r.router.Group("/categories") // localhost:8080/categories
 	{
-		categoryRouter.POST("/", func(context *gin.Context) {})
-		categoryRouter.GET("/", func(context *gin.Context) {})
+		categoryRouter.GET("/", r.cc.GetCategories)
+		categoryRouter.POST("/", r.cc.AddCategory)
 		categoryRouter.GET("/:id", func(context *gin.Context) {})
 		categoryRouter.GET("/:id/tasks", func(context *gin.Context) {})
 		categoryRouter.PUT("/:id", func(context *gin.Context) {})
