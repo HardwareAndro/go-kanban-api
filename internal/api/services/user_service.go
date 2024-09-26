@@ -1,13 +1,13 @@
 package services
 
 import (
+	"github.com/HardwareAndro/go-kanban-api/internal/config"
+	"github.com/HardwareAndro/go-kanban-api/internal/models"
+	repository "github.com/HardwareAndro/go-kanban-api/internal/repositories"
+	"github.com/HardwareAndro/go-kanban-api/internal/shared/constants"
 	"log"
 	"os"
 
-	model "github.com/HardwareAndro/go-kanban-api/app/models"
-	"github.com/HardwareAndro/go-kanban-api/app/shared/constants"
-	repository "github.com/HardwareAndro/go-kanban-api/app/shared/repositories"
-	"github.com/HardwareAndro/go-kanban-api/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )

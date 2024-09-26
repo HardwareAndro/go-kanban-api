@@ -1,21 +1,20 @@
 package services
 
 import (
+	"github.com/HardwareAndro/go-kanban-api/internal/config"
+	model2 "github.com/HardwareAndro/go-kanban-api/internal/models"
+	repository "github.com/HardwareAndro/go-kanban-api/internal/repositories"
+	"github.com/HardwareAndro/go-kanban-api/internal/shared/constants"
 	"log"
 	"os"
-
-	model "github.com/HardwareAndro/go-kanban-api/app/models"
-	"github.com/HardwareAndro/go-kanban-api/app/shared/constants"
-	repository "github.com/HardwareAndro/go-kanban-api/app/shared/repositories"
-	"github.com/HardwareAndro/go-kanban-api/config"
 )
 
 type ProjectService struct {
-	projectRepository *repository.GenericRepository[model.Project]
+	projectRepository *repository.GenericRepository[model2.Project]
 	App               config.GoAppTools
 }
 
-func NewProjectService(projectRepository *repository.GenericRepository[model.Project]) *ProjectService {
+func NewProjectService(projectRepository *repository.GenericRepository[model2.Project]) *ProjectService {
 	InfoLogger := log.New(os.Stdout, "INFO: ", log.LstdFlags|log.Lshortfile)
 	ErrorLogger := log.New(os.Stderr, "ERROR: ", log.LstdFlags|log.Lshortfile)
 	var app config.GoAppTools
@@ -27,34 +26,34 @@ func NewProjectService(projectRepository *repository.GenericRepository[model.Pro
 	}
 }
 
-func (ps *ProjectService) GetProjects() ([]model.Project, error) {
+func (ps *ProjectService) GetProjects() ([]model2.Project, error) {
 	projects, err := ps.projectRepository.FindAll()
 	if err != nil {
 		ps.App.ErrorLogger.Println(constants.ERR_PROJECT_NOT_FOUND, err)
-		return []model.Project{}, nil // Return an empty slice instead of nil
+		return []model2.Project{}, nil // Return an empty slice instead of nil
 	}
 	return projects, nil
 }
 
-func (ps *ProjectService) GetProjectById(id string) (*model.Project, error) {
+func (ps *ProjectService) GetProjectById(id string) (*model2.Project, error) {
 	project, err := ps.projectRepository.FindById(id)
 	if err != nil {
 		ps.App.ErrorLogger.Println(constants.ERR_PROJECT_NOT_FOUND, err)
-		return &model.Project{}, nil
+		return &model2.Project{}, nil
 	}
 	return project, nil
 }
 
-func (ps *ProjectService) GetProjectCategoriesById(id string) ([]model.Category, error) {
+func (ps *ProjectService) GetProjectCategoriesById(id string) ([]model2.Category, error) {
 	// Retrieve the project first, then access its categories
 	project, err := ps.GetProjectById(id)
 	if err != nil {
-		return []model.Category{}, nil
+		return []model2.Category{}, nil
 	}
 	return project.Categories, nil // Assuming categories are directly part of the project model
 }
 
-func (ps *ProjectService) AddProject(project *model.Project) (*model.Project, error) {
+func (ps *ProjectService) AddProject(project *model2.Project) (*model2.Project, error) {
 	_, err := ps.projectRepository.Create(project)
 	if err != nil {
 		ps.App.ErrorLogger.Fatalln(constants.ERR_ADD_PROJECT, err)
@@ -64,7 +63,7 @@ func (ps *ProjectService) AddProject(project *model.Project) (*model.Project, er
 	return project, nil
 }
 
-func (ps *ProjectService) UpdateProjectById(project *model.Project, id string) (*model.Project, error) {
+func (ps *ProjectService) UpdateProjectById(project *model2.Project, id string) (*model2.Project, error) {
 	err := ps.projectRepository.Update(id, project)
 	if err != nil {
 		ps.App.ErrorLogger.Println(constants.ERR_UPDATE_PROJECT, err)
