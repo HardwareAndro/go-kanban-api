@@ -104,3 +104,11 @@ kubernetes/*.bak
 .aws/
 *.pem
 *.key
+
+# JetBrains IDEs and editor-specific files
+.idea/
+*.iws
+*.iml
+*.ipr
+.DS_Store
+.vscode/
