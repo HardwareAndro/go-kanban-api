@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/HardwareAndro/go-kanban-api/app/api/controllers"
+	"github.com/HardwareAndro/go-kanban-api/internal/api/controllers"
 	"github.com/gin-gonic/gin"
 )
 

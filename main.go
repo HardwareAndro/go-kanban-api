@@ -2,25 +2,36 @@ package main
 
 import (
 	"context"
+	router "github.com/HardwareAndro/go-kanban-api/internal/api"
+	"github.com/HardwareAndro/go-kanban-api/internal/api/controllers"
+	"github.com/HardwareAndro/go-kanban-api/internal/api/services"
+	model "github.com/HardwareAndro/go-kanban-api/internal/models"
+	repository "github.com/HardwareAndro/go-kanban-api/internal/repositories"
+	"github.com/HardwareAndro/go-kanban-api/internal/shared/constants"
+	"github.com/HardwareAndro/go-kanban-api/pkg/mongo"
+	ginzap "github.com/gin-contrib/zap"
+	"go.uber.org/zap"
+	"time"
 
-	router "github.com/HardwareAndro/go-kanban-api/app/api"
-	controller "github.com/HardwareAndro/go-kanban-api/app/api/controllers"
-	service "github.com/HardwareAndro/go-kanban-api/app/api/services"
-	model "github.com/HardwareAndro/go-kanban-api/app/models"
-	"github.com/HardwareAndro/go-kanban-api/app/shared/constants"
-	repository "github.com/HardwareAndro/go-kanban-api/app/shared/repositories"
-	"github.com/HardwareAndro/go-kanban-api/app/shared/driver"
 	"github.com/gin-gonic/gin"
 )
+
+func init() {
+	zap.ReplaceGlobals(zap.Must(zap.NewProduction()))
+}
 
 func main() {
 	r := gin.Default()
 
-	projectDriver := driver.NewDriver()
+	gin.SetMode(gin.ReleaseMode)
+	r.Use(ginzap.Ginzap(zap.L(), time.RFC3339, true))
+	r.Use(ginzap.RecoveryWithZap(zap.L(), true))
+
+	projectDriver := mongo.NewDriver()
 	projectDriver.ConnectDatabase()
 	defer func() {
 		if err := projectDriver.Client.Disconnect(context.TODO()); err != nil {
-			projectDriver.App.ErrorLogger.Println(constants.ERR_MONGO_CONNECTION, err)
+			zap.L().Error(constants.ERR_MONGO_CONNECTION, zap.String("Error", err.Error()))
 		}
 	}()
 	categoryRepository := repository.NewGenericRepository[model.Category](projectDriver.CategoryColl)
@@ -28,18 +39,18 @@ func main() {
 	taskRepository := repository.NewGenericRepository[model.Task](projectDriver.TaskColl)
 	userRepository := repository.NewGenericRepository[model.User](projectDriver.UserColl)
 
-	categoryService := service.NewCategoryService(categoryRepository)
-	projectService := service.NewProjectService(projectRepository)
-	taskService := service.NewTaskService(taskRepository)
-	userService := service.NewUserService(userRepository)
+	categoryService := services.NewCategoryService(categoryRepository)
+	projectService := services.NewProjectService(projectRepository)
+	taskService := services.NewTaskService(taskRepository)
+	userService := services.NewUserService(userRepository)
 
-	cc := controller.NewCategoryController(categoryService)
-	pc := controller.NewProjectController(projectService)
-	tc := controller.NewTaskController(taskService)
-	uc := controller.NewUserController(userService)
+	cc := controllers.NewCategoryController(categoryService)
+	pc := controllers.NewProjectController(projectService)
+	tc := controllers.NewTaskController(taskService)
+	uc := controllers.NewUserController(userService)
 
 	routes := router.NewRouter(r, pc, cc, tc, uc)
 
 	routes.SetupRoutes()
-	r.Run(":8081")
+	r.Run(":8080")
 }

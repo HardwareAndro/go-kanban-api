@@ -1,11 +1,11 @@
 package controllers
 
 import (
+	"github.com/HardwareAndro/go-kanban-api/internal/api/services"
+	models "github.com/HardwareAndro/go-kanban-api/internal/models"
+	"github.com/HardwareAndro/go-kanban-api/internal/shared/constants"
 	"net/http"
 
-	"github.com/HardwareAndro/go-kanban-api/app/api/services"
-	models "github.com/HardwareAndro/go-kanban-api/app/models"
-	constants "github.com/HardwareAndro/go-kanban-api/app/shared/constants"
 	"github.com/gin-gonic/gin"
 )
 

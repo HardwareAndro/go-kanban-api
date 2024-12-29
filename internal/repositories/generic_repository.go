@@ -3,9 +3,9 @@ package repositories
 import (
 	"context"
 	"fmt"
+	"github.com/HardwareAndro/go-kanban-api/internal/shared/constants"
 	"time"
 
-	"github.com/HardwareAndro/go-kanban-api/app/shared/constants"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
